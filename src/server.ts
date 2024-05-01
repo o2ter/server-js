@@ -23,7 +23,7 @@
 //  THE SOFTWARE.
 //
 
-import { Express } from 'express';
+import express, { Express } from 'express';
 import { createExpress, ExpressOptions } from './express';
 import { ServerOptions, createHttpServer } from './http';
 import { Server as IOServer, ServerOptions as IOServerOptions } from 'socket.io';
@@ -34,6 +34,13 @@ type Options = ServerOptions & {
 };
 
 export class Server {
+
+  static json = express.json;
+  static raw = express.raw;
+  static Router = express.Router;
+  static static = express.static;
+  static text = express.text;
+  static urlencoded = express.urlencoded;
 
   private _express?: Express;
   private _server?: ReturnType<typeof createHttpServer>;
