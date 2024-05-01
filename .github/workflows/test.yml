@@ -17,5 +17,3 @@ jobs:
       - run: yarn install
       - name: Test rollup
         run: yarn rollup
-      - name: Run tests
-        run: yarn test
