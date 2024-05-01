@@ -23,6 +23,7 @@
 //  THE SOFTWARE.
 //
 
+import _ from 'lodash';
 import express, { Express } from 'express';
 import { createExpress, ExpressOptions } from './express';
 import { ServerOptions, createHttpServer } from './http';
@@ -92,8 +93,9 @@ export class Server {
     return server.listen.bind(server);
   }
 
-  get close() {
-    const server = this.server();
-    return server.close.bind(server);
+  close() {
+    return new Promise<void>((res, rej) => {
+      this.server().close((err) => _.isNil(err) ? res() : rej(err));
+    });
   }
 }
