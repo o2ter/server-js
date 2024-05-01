@@ -1,5 +1,5 @@
 //
-//  server.ts
+//  express.ts
 //
 //  The MIT License
 //  Copyright (c) 2021 - 2024 O2ter Limited. All rights reserved.
@@ -23,38 +23,15 @@
 //  THE SOFTWARE.
 //
 
-import { Express } from 'express';
-import { createExpress } from './express';
-import { _ServerOptions, createHttpServer } from './http';
-import { Server as IOServer, ServerOptions as IOServerOptions } from 'socket.io';
+import express from 'express';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import { logger } from './logger';
 
-type Options = _ServerOptions & {
-  socket?: Partial<IOServerOptions>;
+export const createExpress = () => {
+  const app = express();
+  app.use(logger);
+  app.use(compression());
+  app.use(cookieParser());
+  return app;
 };
-
-export class Server {
-
-  private _express?: Express;
-  private _server?: ReturnType<typeof createHttpServer>;
-  private _socket?: IOServer;
-
-  private options?: Options;
-
-  constructor(options?: Options) {
-    this.options = options;
-  }
-
-  express() {
-    return this._express = this._express ?? createExpress();
-  }
-
-  server() {
-    const { socket, ...options } = this.options ?? {};
-    return this._server = this._server ?? createHttpServer(options, this.express());
-  }
-
-  socket() {
-    const { socket } = this.options ?? {};
-    return this._socket = this._socket ?? new IOServer(this.server(), socket);
-  }
-}

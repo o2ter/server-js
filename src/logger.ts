@@ -1,5 +1,5 @@
 //
-//  server.ts
+//  logger.ts
 //
 //  The MIT License
 //  Copyright (c) 2021 - 2024 O2ter Limited. All rights reserved.
@@ -23,38 +23,40 @@
 //  THE SOFTWARE.
 //
 
-import { Express } from 'express';
-import { createExpress } from './express';
-import { _ServerOptions, createHttpServer } from './http';
-import { Server as IOServer, ServerOptions as IOServerOptions } from 'socket.io';
+import _ from 'lodash';
+import morgan from 'morgan';
 
-type Options = _ServerOptions & {
-  socket?: Partial<IOServerOptions>;
-};
+export const logger = morgan(
+  (tokens, req, res) => {
 
-export class Server {
+    const date = tokens.date(req, res, 'iso');
+    const remoteAddr = tokens['remote-addr'](req, res);
+    const httpVersion = tokens['http-version'](req, res);
+    const method = tokens.method(req, res);
+    const url = tokens.url(req, res);
+    const status = tokens.status(req, res) || '-';
+    const responseTime = tokens['response-time'](req, res);
+    const totalTime = tokens['total-time'](req, res);
+    const contentLength = tokens.res(req, res, 'content-length') || '-';
 
-  private _express?: Express;
-  private _server?: ReturnType<typeof createHttpServer>;
-  private _socket?: IOServer;
+    const _status = Number(status);
+    const color = _status >= 500 ? 31
+      : _status >= 400 ? 33
+        : _status >= 300 ? 36
+          : _status >= 200 ? 32
+            : 0;
 
-  private options?: Options;
-
-  constructor(options?: Options) {
-    this.options = options;
-  }
-
-  express() {
-    return this._express = this._express ?? createExpress();
-  }
-
-  server() {
-    const { socket, ...options } = this.options ?? {};
-    return this._server = this._server ?? createHttpServer(options, this.express());
-  }
-
-  socket() {
-    const { socket } = this.options ?? {};
-    return this._socket = this._socket ?? new IOServer(this.server(), socket);
-  }
-}
+    return [
+      `\x1B[35m[${date}]\x1B[0m`,
+      remoteAddr,
+      `HTTP/${httpVersion}`,
+      method,
+      url,
+      `\x1B[${color}m${status}ms\x1B[0m`,
+      `${contentLength} bytes`,
+      `\x1B[1m${totalTime}ms\x1B[0m`,
+      `${responseTime}ms`,
+    ].join(' ');
+  },
+  { stream: { write: (str) => console.info(str.trim()) } }
+);
