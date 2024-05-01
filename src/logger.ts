@@ -25,6 +25,7 @@
 
 import _ from 'lodash';
 import morgan from 'morgan';
+import chalk from 'chalk';
 
 export const logger = morgan(
   (tokens, req, res) => {
@@ -40,21 +41,21 @@ export const logger = morgan(
     const contentLength = tokens.res(req, res, 'content-length') || '-';
 
     const _status = Number(status);
-    const color = _status >= 500 ? 31
-      : _status >= 400 ? 33
-        : _status >= 300 ? 36
-          : _status >= 200 ? 32
-            : 0;
+    const color = _status >= 500 ? chalk.red
+      : _status >= 400 ? chalk.yellow
+        : _status >= 300 ? chalk.cyan
+          : _status >= 200 ? chalk.green
+            : chalk.visible;
 
     return [
-      `\x1B[35m[${date}]\x1B[0m`,
+      chalk.magenta(`[${date}]`),
       remoteAddr,
       `HTTP/${httpVersion}`,
       method,
       url,
-      `\x1B[${color}m${status}ms\x1B[0m`,
+      color(status),
       `${contentLength} bytes`,
-      `\x1B[1m${totalTime}ms\x1B[0m`,
+      chalk.bold(`${totalTime}ms`),
       `${responseTime}ms`,
     ].join(' ');
   },

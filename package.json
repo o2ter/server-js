@@ -16,6 +16,7 @@
     "test": "jest --detectOpenHandles"
   },
   "dependencies": {
+    "chalk": "^5.3.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "express": "^4.19.2",
