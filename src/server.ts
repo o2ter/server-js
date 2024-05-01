@@ -83,11 +83,6 @@ export class Server {
     return express.render.bind(express);
   }
 
-  get on() {
-    const express = this.express();
-    return express.on.bind(express);
-  }
-
   address() {
     return this.server().address();
   }
