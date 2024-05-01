@@ -59,5 +59,5 @@ export const logger = morgan(
       `${responseTime}ms`,
     ].join(' ');
   },
-  { stream: { write: (str) => console.info(str.trim()) } }
+  { stream: { write: (str) => console.info('%s', str.trim()) } }
 );

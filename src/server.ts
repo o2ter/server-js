@@ -33,6 +33,8 @@ type Options = ServerOptions & {
   socket?: Partial<IOServerOptions>;
 };
 
+export { Request, Response, Router } from 'express';
+
 export class Server {
 
   static json = express.json;
@@ -63,5 +65,34 @@ export class Server {
 
   socket() {
     return this._socket = this._socket ?? new IOServer(this.server(), this.options?.socket);
+  }
+
+  get use() {
+    const express = this.express();
+    return express.use.bind(express);
+  }
+
+  get render() {
+    const express = this.express();
+    return express.render.bind(express);
+  }
+
+  get on() {
+    const express = this.express();
+    return express.on.bind(express);
+  }
+
+  address() {
+    return this.server().address();
+  }
+
+  get listen() {
+    const server = this.server();
+    return server.listen.bind(server);
+  }
+
+  get close() {
+    const server = this.server();
+    return server.close.bind(server);
   }
 }
