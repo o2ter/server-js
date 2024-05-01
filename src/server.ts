@@ -33,7 +33,13 @@ type Options = ServerOptions & {
   socket?: Partial<IOServerOptions>;
 };
 
-export { Request, Response, Router } from 'express';
+export {
+  Router,
+  Request,
+  Response,
+  RequestHandler,
+  CookieOptions,
+} from 'express';
 
 export class Server {
 
