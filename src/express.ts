@@ -28,10 +28,24 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { logger } from './logger';
 
-export const createExpress = () => {
+export type ExpressOptions = {
+  compression?: compression.CompressionOptions;
+  cookie?: cookieParser.CookieParseOptions & {
+    secret?: string | string[];
+  };
+}
+
+export const createExpress = (options: ExpressOptions) => {
+  const {
+    compression: compressionOpts,
+    cookie: {
+      secret: cookieSecret,
+      ...cookieOtps
+    } = {},
+  } = options;
   const app = express();
   app.use(logger);
-  app.use(compression());
-  app.use(cookieParser());
+  app.use(compression(compressionOpts));
+  app.use(cookieParser(cookieSecret, cookieOtps));
   return app;
 };

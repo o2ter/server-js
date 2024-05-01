@@ -24,11 +24,12 @@
 //
 
 import { Express } from 'express';
-import { createExpress } from './express';
-import { _ServerOptions, createHttpServer } from './http';
+import { createExpress, ExpressOptions } from './express';
+import { ServerOptions, createHttpServer } from './http';
 import { Server as IOServer, ServerOptions as IOServerOptions } from 'socket.io';
 
-type Options = _ServerOptions & {
+type Options = ServerOptions & {
+  express?: ExpressOptions;
   socket?: Partial<IOServerOptions>;
 };
 
@@ -45,16 +46,15 @@ export class Server {
   }
 
   express() {
-    return this._express = this._express ?? createExpress();
+    return this._express = this._express ?? createExpress(this.options?.express ?? {});
   }
 
   server() {
-    const { socket, ...options } = this.options ?? {};
+    const { socket, express, ...options } = this.options ?? {};
     return this._server = this._server ?? createHttpServer(options, this.express());
   }
 
   socket() {
-    const { socket } = this.options ?? {};
-    return this._socket = this._socket ?? new IOServer(this.server(), socket);
+    return this._socket = this._socket ?? new IOServer(this.server(), this.options?.socket);
   }
 }

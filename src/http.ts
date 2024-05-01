@@ -30,9 +30,9 @@ type _HTTPServerOptions = HTTPServerOptions & {
   http: 'v1';
 };
 
-export type _ServerOptions = _HTTPServerOptions;
+export type ServerOptions = _HTTPServerOptions;
 
-export const createHttpServer = (options: Partial<_ServerOptions>, express: Express) => {
+export const createHttpServer = (options: Partial<ServerOptions>, express: Express) => {
   const { http: version, ..._options } = options;
   switch (version) {
     default: return http.createServer(_options, express);
