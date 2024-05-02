@@ -59,8 +59,8 @@ export class Server {
 
   private _options: Options;
 
-  constructor(options?: Options) {
-    this._options = options ?? { http: 'v1' };
+  constructor(options: Options = { http: 'v1' }) {
+    this._options = options;
   }
 
   get options() {
