@@ -32,7 +32,7 @@ export const BACKGROUND_COLOR_RESET = 49 as const;
 
 export const ansi16 = (code: number) => `\u001B[${code}m`;
 export const ansi256 = (offset = 0) => (code: number) => `\u001B[${38 + offset};5;${code}m`;
-export const ansi16m = (offset = 0) => (red: number, green: number, blue: number) => `\u001B[${38 + offset};2;${red};${green};${blue}m`;
+export const ansiTruecolor = (offset = 0) => (red: number, green: number, blue: number) => `\u001B[${38 + offset};2;${red};${green};${blue}m`;
 
 export const modifiers = {
   reset: [0, 0],
