@@ -32,7 +32,7 @@ type _HTTPServerOptions = HTTPServerOptions & {
 
 export type ServerOptions = _HTTPServerOptions;
 
-export const createHttpServer = (options: Partial<ServerOptions>, express: Express) => {
+export const createHttpServer = (options: ServerOptions, express: Express) => {
   const { http: version, ..._options } = options;
   switch (version) {
     default: return http.createServer(_options, express);
