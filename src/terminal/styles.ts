@@ -26,9 +26,7 @@
 import _ from 'lodash';
 
 export const ANSI_BACKGROUND_OFFSET = 10 as const;
-
 export const COLOR_RESET = 39 as const;
-export const BACKGROUND_COLOR_RESET = 49 as const;
 
 export const ansi16 = (code: number) => `\u001B[${code}m`;
 export const ansi256 = (code: number, offset: number) => `\u001B[${38 + offset};5;${code}m`;
