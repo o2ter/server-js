@@ -43,8 +43,8 @@ export const modifiers = {
   overline: [53, 55],
   inverse: [7, 27],
   hidden: [8, 28],
-  visible: [28, 8],
   strikethrough: [9, 29],
+  visible: [28, 8],
 } as const;
 
 export const colors = {
