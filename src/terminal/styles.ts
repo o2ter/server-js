@@ -1,5 +1,5 @@
 //
-//  logger.ts
+//  styles.ts
 //
 //  The MIT License
 //  Copyright (c) 2021 - 2024 O2ter Limited. All rights reserved.
@@ -24,40 +24,44 @@
 //
 
 import _ from 'lodash';
-import morgan from 'morgan';
-import { Terminal } from './terminal';
 
-export const logger = morgan(
-  (tokens, req, res) => {
+export const ANSI_BACKGROUND_OFFSET = 10 as const;
 
-    const date = tokens.date(req, res, 'iso');
-    const remoteAddr = tokens['remote-addr'](req, res);
-    const httpVersion = tokens['http-version'](req, res);
-    const method = tokens.method(req, res);
-    const url = tokens.url(req, res);
-    const status = tokens.status(req, res) || '-';
-    const responseTime = tokens['response-time'](req, res);
-    const totalTime = tokens['total-time'](req, res);
-    const contentLength = tokens.res(req, res, 'content-length') || '-';
+export const COLOR_RESET = 39 as const;
+export const BACKGROUND_COLOR_RESET = 49 as const;
 
-    const _status = Number(status);
-    const color = _status >= 500 ? Terminal.red
-      : _status >= 400 ? Terminal.yellow
-        : _status >= 300 ? Terminal.cyan
-          : _status >= 200 ? Terminal.green
-            : (str: string) => str;
+export const ansi16 = (code: number) => `\u001B[${code}m`;
+export const ansi256 = (offset = 0) => (code: number) => `\u001B[${38 + offset};5;${code}m`;
+export const ansi16m = (offset = 0) => (red: number, green: number, blue: number) => `\u001B[${38 + offset};2;${red};${green};${blue}m`;
 
-    return [
-      Terminal.magenta(`[${date}]`),
-      remoteAddr,
-      `HTTP/${httpVersion}`,
-      method,
-      url,
-      color(status),
-      `${contentLength} bytes`,
-      Terminal.bold(`${totalTime}ms`),
-      `${responseTime}ms`,
-    ].join(' ');
-  },
-  { stream: { write: (str) => console.info('%s', str.trim()) } }
-);
+export const modifiers = {
+  reset: [0, 0],
+  bold: [1, 22],
+  dim: [2, 22],
+  italic: [3, 23],
+  underline: [4, 24],
+  overline: [53, 55],
+  inverse: [7, 27],
+  hidden: [8, 28],
+  visible: [28, 8],
+  strikethrough: [9, 29],
+} as const;
+
+export const colors = {
+  black: 30,
+  red: 31,
+  green: 32,
+  yellow: 33,
+  blue: 34,
+  magenta: 35,
+  cyan: 36,
+  white: 37,
+  blackBright: 90,
+  redBright: 91,
+  greenBright: 92,
+  yellowBright: 93,
+  blueBright: 94,
+  magentaBright: 95,
+  cyanBright: 96,
+  whiteBright: 97,
+};

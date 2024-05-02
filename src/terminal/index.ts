@@ -1,5 +1,5 @@
 //
-//  logger.ts
+//  index.ts
 //
 //  The MIT License
 //  Copyright (c) 2021 - 2024 O2ter Limited. All rights reserved.
@@ -24,40 +24,24 @@
 //
 
 import _ from 'lodash';
-import morgan from 'morgan';
-import { Terminal } from './terminal';
+import * as styles from './styles';
+import { supportColors } from './supportColors';
 
-export const logger = morgan(
-  (tokens, req, res) => {
+const createAnsi16Builder = (
+  open: number,
+  close: number,
+) => (str: string) => {
+  if (supportColors() < 1) return str;
+  return `${styles.ansi16(open)}${str}${styles.ansi16(close)}`;
+};
 
-    const date = tokens.date(req, res, 'iso');
-    const remoteAddr = tokens['remote-addr'](req, res);
-    const httpVersion = tokens['http-version'](req, res);
-    const method = tokens.method(req, res);
-    const url = tokens.url(req, res);
-    const status = tokens.status(req, res) || '-';
-    const responseTime = tokens['response-time'](req, res);
-    const totalTime = tokens['total-time'](req, res);
-    const contentLength = tokens.res(req, res, 'content-length') || '-';
+type Colors = keyof typeof styles.colors;
 
-    const _status = Number(status);
-    const color = _status >= 500 ? Terminal.red
-      : _status >= 400 ? Terminal.yellow
-        : _status >= 300 ? Terminal.cyan
-          : _status >= 200 ? Terminal.green
-            : (str: string) => str;
-
-    return [
-      Terminal.magenta(`[${date}]`),
-      remoteAddr,
-      `HTTP/${httpVersion}`,
-      method,
-      url,
-      color(status),
-      `${contentLength} bytes`,
-      Terminal.bold(`${totalTime}ms`),
-      `${responseTime}ms`,
-    ].join(' ');
-  },
-  { stream: { write: (str) => console.info('%s', str.trim()) } }
-);
+export const Terminal = {
+  ..._.mapValues(styles.modifiers, ([open, close]) => createAnsi16Builder(open, close)),
+  ..._.mapValues(styles.colors, (code) => createAnsi16Builder(code, styles.COLOR_RESET)),
+  ..._.mapValues(
+    _.mapKeys(styles.colors, k => `${k}Bg`) as { [C in Colors as `${C}Bg`]: number },
+    (code) => createAnsi16Builder(code + styles.ANSI_BACKGROUND_OFFSET, styles.COLOR_RESET)
+  ),
+};
