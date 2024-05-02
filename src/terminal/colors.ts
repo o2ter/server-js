@@ -1,5 +1,5 @@
 //
-//  styles.ts
+//  colors.ts
 //
 //  The MIT License
 //  Copyright (c) 2021 - 2024 O2ter Limited. All rights reserved.
@@ -25,43 +25,41 @@
 
 import _ from 'lodash';
 
-export const ANSI_BACKGROUND_OFFSET = 10 as const;
+export const rgbToAnsi256 = (red: number, green: number, blue: number) => { 
+  if (red === green && green === blue) {
+    if (red < 8) return 16;
+    if (red > 248) return 231;
+    return Math.round(((red - 8) / 247) * 24) + 232;
+  }
+  return 16
+    + (36 * Math.round(red / 255 * 5))
+    + (6 * Math.round(green / 255 * 5))
+    + Math.round(blue / 255 * 5);
+}
 
-export const COLOR_RESET = 39 as const;
-export const BACKGROUND_COLOR_RESET = 49 as const;
+export const ansi256ToAnsi16 = (code: number) => {
+  if (code < 8) return 30 + code;
+  if (code < 16) return 90 + (code - 8);
 
-export const ansi16 = (code: number) => `\u001B[${code}m`;
-export const ansi256 = (code: number, offset: number) => `\u001B[${38 + offset};5;${code}m`;
-export const ansiRGB = (red: number, green: number, blue: number, offset: number) => `\u001B[${38 + offset};2;${red};${green};${blue}m`;
+  let red;
+  let green;
+  let blue;
 
-export const modifiers = {
-  reset: [0, 0],
-  bold: [1, 22],
-  dim: [2, 22],
-  italic: [3, 23],
-  underline: [4, 24],
-  overline: [53, 55],
-  inverse: [7, 27],
-  hidden: [8, 28],
-  strikethrough: [9, 29],
-  visible: [28, 8],
-} as const;
+  if (code >= 232) {
+    red = (((code - 232) * 10) + 8) / 255;
+    green = red;
+    blue = red;
+  } else {
+    code -= 16;
+    const remainder = code % 36;
+    red = Math.floor(code / 36) / 5;
+    green = Math.floor(remainder / 6) / 5;
+    blue = (remainder % 6) / 5;
+  }
 
-export const colors = {
-  black: 30,
-  red: 31,
-  green: 32,
-  yellow: 33,
-  blue: 34,
-  magenta: 35,
-  cyan: 36,
-  white: 37,
-  blackBright: 90,
-  redBright: 91,
-  greenBright: 92,
-  yellowBright: 93,
-  blueBright: 94,
-  magentaBright: 95,
-  cyanBright: 96,
-  whiteBright: 97,
-};
+  const value = Math.max(red, green, blue) * 2;
+  if (value === 0) return 30;
+
+  const result = 30 + ((Math.round(blue) << 2) | (Math.round(green) << 1) | Math.round(red));
+  return value === 2 ? result + 60 : result;
+}

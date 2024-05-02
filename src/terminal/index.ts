@@ -25,23 +25,42 @@
 
 import _ from 'lodash';
 import * as styles from './styles';
-import { supportColors } from './supportColors';
-
-const createAnsi16Builder = (
-  open: number,
-  close: number,
-) => (str: string) => {
-  if (supportColors() < 1) return str;
-  return `${styles.ansi16(open)}${str}${styles.ansi16(close)}`;
-};
+import { supports } from './supports';
+import { ansi256ToAnsi16, rgbToAnsi256 } from './colors';
 
 type Colors = keyof typeof styles.colors;
 
+const _ansi16Styler = (open: number, close: number, str: string) => `${styles.ansi16(open)}${str}${styles.ansi16(close)}`;
+const _ansi256Styler = (code: number, offset: number, str: string) => `${styles.ansi256(code, offset)}${str}${styles.ansi16(styles.COLOR_RESET)}`;
+
+const ansi16Styler = (open: number, close: number) => (str: string) => supports() < 1 ? str : _ansi16Styler(open, close, str);
+
+const ansi256Styler = (code: number, offset: number) => (str: string) => {
+  switch (supports()) {
+    case 0: return str;
+    case 1: return _ansi16Styler(ansi256ToAnsi16(code), styles.COLOR_RESET, str);
+    default: return _ansi256Styler(code, offset, str);
+  }
+};
+
+const ansiRGBStyler = (red: number, green: number, blue: number, offset: number) => (str: string) => {
+  switch (supports()) {
+    case 0: return str;
+    case 1: return _ansi16Styler(ansi256ToAnsi16(rgbToAnsi256(red, green, blue)), styles.COLOR_RESET, str);
+    case 2: return _ansi256Styler(rgbToAnsi256(red, green, blue), offset, str);
+    default: return `${styles.ansiRGB(red, green, blue, offset)}${str}${styles.ansi16(styles.COLOR_RESET)}`;
+  }
+};
+
 export const Terminal = {
-  ..._.mapValues(styles.modifiers, ([open, close]) => createAnsi16Builder(open, close)),
-  ..._.mapValues(styles.colors, (code) => createAnsi16Builder(code, styles.COLOR_RESET)),
+  ..._.mapValues(styles.modifiers, ([open, close]) => ansi16Styler(open, close)),
+  ..._.mapValues(styles.colors, (code) => ansi16Styler(code, styles.COLOR_RESET)),
   ..._.mapValues(
     _.mapKeys(styles.colors, k => `${k}Bg`) as { [C in Colors as `${C}Bg`]: number },
-    (code) => createAnsi16Builder(code + styles.ANSI_BACKGROUND_OFFSET, styles.COLOR_RESET)
+    (code) => ansi16Styler(code + styles.ANSI_BACKGROUND_OFFSET, styles.COLOR_RESET)
   ),
+  ansi256: (code: number) => (str: string) => ansi256Styler(code, 0),
+  ansi256Bg: (code: number) => (str: string) => ansi256Styler(code, styles.ANSI_BACKGROUND_OFFSET),
+  rgb: (red: number, green: number, blue: number) => (str: string) => ansiRGBStyler(red, green, blue, 0),
+  rgbBg: (red: number, green: number, blue: number) => (str: string) => ansiRGBStyler(red, green, blue, styles.ANSI_BACKGROUND_OFFSET),
 };

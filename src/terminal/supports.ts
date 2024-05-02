@@ -1,5 +1,5 @@
 //
-//  supportColors.ts
+//  supports.ts
 //
 //  The MIT License
 //  Copyright (c) 2021 - 2024 O2ter Limited. All rights reserved.
@@ -29,15 +29,15 @@ import os from 'os';
 const CI_LEVEL = {
   'GITHUB_ACTIONS': 3,
   'GITEA_ACTIONS': 3,
-  'TRAVIS': 1, 
-  'CIRCLECI': 1, 
-  'APPVEYOR': 1, 
-  'GITLAB_CI': 1, 
-  'BUILDKITE': 1, 
+  'TRAVIS': 1,
+  'CIRCLECI': 1,
+  'APPVEYOR': 1,
+  'GITLAB_CI': 1,
+  'BUILDKITE': 1,
   'DRONE': 1,
 };
 
-export const supportColors = () => {
+export const supports = () => {
 
   const env = process.env;
 
