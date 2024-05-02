@@ -57,31 +57,35 @@ export class Server {
   private _server?: ReturnType<typeof createHttpServer>;
   private _socket?: IOServer;
 
-  private options: Options;
+  private _options: Options;
 
   constructor(options?: Options) {
-    this.options = options ?? { http: 'v1' };
+    this._options = options ?? { http: 'v1' };
+  }
+
+  get options() {
+    return this._options;
   }
 
   get logger() {
-    return this.options.logger ?? defaultLogger;
+    return this._options.logger ?? defaultLogger;
   }
 
   set logger(x: typeof defaultLogger) {
-    this.options.logger = x;
+    this._options.logger = x;
   }
 
   express() {
-    return this._express = this._express ?? createExpress(this.options?.express ?? {}, { write: (str) => this.logger.write(str) });
+    return this._express = this._express ?? createExpress(this._options?.express ?? {}, { write: (str) => this.logger.write(str) });
   }
 
   server() {
-    const { socket, express, logger, ...options } = this.options ?? {};
+    const { socket, express, logger, ...options } = this._options ?? {};
     return this._server = this._server ?? createHttpServer(options, this.express());
   }
 
   socket() {
-    return this._socket = this._socket ?? new IOServer(this.server(), this.options?.socket);
+    return this._socket = this._socket ?? new IOServer(this.server(), this._options?.socket);
   }
 
   get use() {
