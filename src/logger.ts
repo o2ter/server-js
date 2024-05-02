@@ -27,7 +27,11 @@ import _ from 'lodash';
 import morgan from 'morgan';
 import { Terminal } from './terminal';
 
-export const logger = morgan(
+export const defaultLogger = {
+  write: (str: string) => console.info('%s', str),
+};
+
+export const logHandler = (logger: typeof defaultLogger) => morgan(
   (tokens, req, res) => {
 
     const date = tokens.date(req, res, 'iso');
@@ -59,5 +63,5 @@ export const logger = morgan(
       `${responseTime}ms`,
     ].join(' ');
   },
-  { stream: { write: (str) => console.info('%s', str.trim()) } }
+  { stream: { write: (str) => logger.write(str.trim()) } }
 );

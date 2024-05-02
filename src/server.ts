@@ -28,10 +28,12 @@ import express, { Express } from 'express';
 import { createExpress, ExpressOptions } from './express';
 import { ServerOptions, createHttpServer } from './http';
 import { Server as IOServer, ServerOptions as IOServerOptions } from 'socket.io';
+import { defaultLogger } from './logger';
 
 type Options = ServerOptions & {
   express?: ExpressOptions;
   socket?: Partial<IOServerOptions>;
+  logger?: typeof defaultLogger;
 };
 
 export {
@@ -61,12 +63,16 @@ export class Server {
     this.options = options;
   }
 
+  logger() {
+    return this.options?.logger ?? defaultLogger;
+  }
+
   express() {
-    return this._express = this._express ?? createExpress(this.options?.express ?? {});
+    return this._express = this._express ?? createExpress(this.options?.express ?? {}, { write: (str) => this.logger().write(str) });
   }
 
   server() {
-    const { socket, express, ...options } = this.options ?? {};
+    const { socket, express, logger, ...options } = this.options ?? {};
     return this._server = this._server ?? createHttpServer(options, this.express());
   }
 
