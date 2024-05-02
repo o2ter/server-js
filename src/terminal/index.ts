@@ -56,7 +56,7 @@ export const Terminal = {
   ..._.mapValues(styles.modifiers, ([open, close]) => ansi16Styler(open, close)),
   ..._.mapValues(styles.colors, (code) => ansi16Styler(code, styles.COLOR_RESET)),
   ..._.mapValues(
-    _.mapKeys(styles.colors, k => `${k}Bg`) as { [C in Colors as `${C}Bg`]: number },
+    _.mapKeys(styles.colors, (_v, k) => `${k}Bg`) as { [C in Colors as `${C}Bg`]: number },
     (code) => ansi16Styler(code + styles.ANSI_BACKGROUND_OFFSET, styles.COLOR_RESET)
   ),
   ansi256: (code: number) => ansi256Styler(code, 0),
