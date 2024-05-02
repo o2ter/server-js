@@ -59,8 +59,8 @@ export const Terminal = {
     _.mapKeys(styles.colors, k => `${k}Bg`) as { [C in Colors as `${C}Bg`]: number },
     (code) => ansi16Styler(code + styles.ANSI_BACKGROUND_OFFSET, styles.COLOR_RESET)
   ),
-  ansi256: (code: number) => (str: string) => ansi256Styler(code, 0),
-  ansi256Bg: (code: number) => (str: string) => ansi256Styler(code, styles.ANSI_BACKGROUND_OFFSET),
-  rgb: (red: number, green: number, blue: number) => (str: string) => ansiRGBStyler(red, green, blue, 0),
-  rgbBg: (red: number, green: number, blue: number) => (str: string) => ansiRGBStyler(red, green, blue, styles.ANSI_BACKGROUND_OFFSET),
+  ansi256: (code: number) => ansi256Styler(code, 0),
+  ansi256Bg: (code: number) => ansi256Styler(code, styles.ANSI_BACKGROUND_OFFSET),
+  rgb: (red: number, green: number, blue: number) => ansiRGBStyler(red, green, blue, 0),
+  rgbBg: (red: number, green: number, blue: number) => ansiRGBStyler(red, green, blue, styles.ANSI_BACKGROUND_OFFSET),
 };
