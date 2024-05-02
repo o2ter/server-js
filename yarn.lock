@@ -1018,6 +1018,13 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@o2ter/styler.js@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@o2ter/styler.js/-/styler.js-0.0.1.tgz#bed4ac01bc605cfc8f7092fcc6a7b0c02b9872b7"
+  integrity sha512-EiwmCiR4n3tcTVQbd7sGh5+O4u48xgAn50rE/f39jPYFiBh5L0ic2JvCdHXcKLWfvMPJxKfoAQFMCLiBu+NYJA==
+  dependencies:
+    lodash "^4.17.21"
+
 "@rollup/plugin-babel@^6.0.3":
   version "6.0.4"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-babel/-/plugin-babel-6.0.4.tgz#bd698e351fa9aa9619fcae780aea2a603d98e4c4"

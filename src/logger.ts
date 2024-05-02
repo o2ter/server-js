@@ -25,7 +25,7 @@
 
 import _ from 'lodash';
 import morgan from 'morgan';
-import { Terminal } from './terminal';
+import { Styler } from '@o2ter/styler.js';
 
 export const defaultLogger = {
   write: (str: string) => console.info('%s', str),
@@ -45,21 +45,21 @@ export const logHandler = (logger: typeof defaultLogger) => morgan(
     const contentLength = tokens.res(req, res, 'content-length') || '-';
 
     const _status = Number(status);
-    const color = _status >= 500 ? Terminal.red
-      : _status >= 400 ? Terminal.yellow
-        : _status >= 300 ? Terminal.cyan
-          : _status >= 200 ? Terminal.green
+    const color = _status >= 500 ? Styler.red
+      : _status >= 400 ? Styler.yellow
+        : _status >= 300 ? Styler.cyan
+          : _status >= 200 ? Styler.green
             : (str: string) => str;
 
     return [
-      Terminal.magenta(`[${date}]`),
+      Styler.magenta(`[${date}]`),
       remoteAddr,
       `HTTP/${httpVersion}`,
       method,
       url,
       color(status),
       `${contentLength} bytes`,
-      Terminal.bold(`${totalTime}ms`),
+      Styler.bold(`${totalTime}ms`),
       `${responseTime}ms`,
     ].join(' ');
   },
