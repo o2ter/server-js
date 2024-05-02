@@ -42,7 +42,6 @@ export const modifiers = {
   inverse: [7, 27],
   hidden: [8, 28],
   strikethrough: [9, 29],
-  visible: [28, 8],
 } as const;
 
 export const colors = {
