@@ -39,7 +39,7 @@ export type ExpressOptions = {
 
 const defaultTrustProxy = () => {
   const TRUST_PROXY = process.env.TRUST_PROXY;
-  if (TRUST_PROXY === 'true') return true;
+  if (TRUST_PROXY?.toLowerCase() === 'true') return true;
   const num = Number(TRUST_PROXY);
   return _.isSafeInteger(num) ? num : TRUST_PROXY;
 }
