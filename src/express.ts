@@ -23,6 +23,7 @@
 //  THE SOFTWARE.
 //
 
+import _ from 'lodash';
 import express from 'express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
@@ -39,7 +40,8 @@ export type ExpressOptions = {
 const defaultTrustProxy = () => {
   const TRUST_PROXY = process.env.TRUST_PROXY;
   if (TRUST_PROXY === 'true') return true;
-  return Number(TRUST_PROXY) || TRUST_PROXY;
+  const num = Number(TRUST_PROXY);
+  return _.isSafeInteger(num) ? num : TRUST_PROXY;
 }
 
 export const createExpress = (
