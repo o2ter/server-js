@@ -29,10 +29,17 @@ import cookieParser from 'cookie-parser';
 import { defaultLogger, logHandler } from './logger';
 
 export type ExpressOptions = {
+  trustProxy?: string;
   compression?: compression.CompressionOptions;
   cookie?: cookieParser.CookieParseOptions & {
     secret?: string | string[];
   };
+}
+
+const defaultTrustProxy = () => {
+  const TRUST_PROXY = process.env.TRUST_PROXY;
+  if (TRUST_PROXY === 'true') return true;
+  return Number(TRUST_PROXY) || TRUST_PROXY;
 }
 
 export const createExpress = (
@@ -40,6 +47,7 @@ export const createExpress = (
   logger: typeof defaultLogger,
 ) => {
   const {
+    trustProxy = defaultTrustProxy(),
     compression: compressionOpts,
     cookie: {
       secret: cookieSecret,
@@ -47,6 +55,7 @@ export const createExpress = (
     } = {},
   } = options;
   const app = express();
+  if (trustProxy) app.set('trust proxy', trustProxy);
   app.use(logHandler(logger));
   app.use(compression(compressionOpts));
   app.use(cookieParser(cookieSecret, cookieOtps));
