@@ -25,6 +25,7 @@
 
 import _ from 'lodash';
 import express from 'express';
+import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { defaultLogger, logHandler } from './logger';
@@ -35,6 +36,7 @@ export type ExpressOptions = {
   cookie?: cookieParser.CookieParseOptions & {
     secret?: string | string[];
   };
+  cors?: cors.CorsOptions;
 }
 
 const defaultTrustProxy = () => {
@@ -55,9 +57,11 @@ export const createExpress = (
       secret: cookieSecret,
       ...cookieOtps
     } = {},
+    cors: corsOpts,
   } = options;
   const app = express();
   if (trustProxy) app.set('trust proxy', trustProxy);
+  if (corsOpts) app.use(cors(corsOpts));
   app.use(logHandler(logger));
   app.use(compression(compressionOpts));
   app.use(cookieParser(cookieSecret, cookieOtps));

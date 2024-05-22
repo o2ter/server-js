@@ -29,12 +29,7 @@ import { createExpress, ExpressOptions } from './express';
 import { ServerOptions, createHttpServer } from './http';
 import { Server as IOServer, ServerOptions as IOServerOptions } from 'socket.io';
 import { defaultLogger } from './logger';
-
-type Options = ServerOptions & {
-  express?: ExpressOptions;
-  socket?: Partial<IOServerOptions>;
-  logger?: typeof defaultLogger;
-};
+import { match, Path } from 'path-to-regexp';
 
 export {
   Router,
@@ -44,6 +39,15 @@ export {
   CookieOptions,
 } from 'express';
 
+export namespace Server {
+
+  export type Options = ServerOptions & {
+    express?: ExpressOptions;
+    socket?: Partial<IOServerOptions>;
+    logger?: typeof defaultLogger;
+  };
+}
+
 export class Server {
 
   static json = express.json;
@@ -52,14 +56,15 @@ export class Server {
   static static = express.static;
   static text = express.text;
   static urlencoded = express.urlencoded;
+  static pathMatch = (pattern: Path, path: string) => match(pattern)(path);
 
   private _express?: Express;
   private _server?: ReturnType<typeof createHttpServer>;
   private _socket?: IOServer;
 
-  private _options: Options;
+  private _options: Server.Options;
 
-  constructor(options: Options = { http: 'v1' }) {
+  constructor(options: Server.Options = { http: 'v1' }) {
     this._options = options;
   }
 
