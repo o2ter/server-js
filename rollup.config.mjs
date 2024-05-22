@@ -8,6 +8,7 @@ import dts from 'rollup-plugin-dts';
 const configs = {
   input: {
     index: 'src/index',
+    const: 'src/const',
   },
   external: [
     /node_modules/

@@ -39,6 +39,8 @@ export {
   CookieOptions,
 } from 'express';
 
+export * from './const';
+
 export namespace Server {
 
   export type Options = ServerOptions & {

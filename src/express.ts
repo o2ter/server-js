@@ -29,6 +29,7 @@ import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { defaultLogger, logHandler } from './logger';
+import { csrfHandler, CsrfOptions } from './csrf';
 
 export type ExpressOptions = {
   trustProxy?: string;
@@ -37,6 +38,7 @@ export type ExpressOptions = {
     secret?: string | string[];
   };
   cors?: cors.CorsOptions;
+  csrf?: CsrfOptions;
 }
 
 const defaultTrustProxy = () => {
@@ -58,10 +60,12 @@ export const createExpress = (
       ...cookieOtps
     } = {},
     cors: corsOpts,
+    csrf: csrfOpts,
   } = options;
   const app = express();
   if (trustProxy) app.set('trust proxy', trustProxy);
   if (corsOpts) app.use(cors(corsOpts));
+  if (csrfOpts) app.use(csrfHandler(csrfOpts));
   app.use(logHandler(logger));
   app.use(compression(compressionOpts));
   app.use(cookieParser(cookieSecret, cookieOtps));
