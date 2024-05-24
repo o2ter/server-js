@@ -55,7 +55,7 @@ const branchMatch = <R = void>(
   path: string,
   branches: {
     pattern: Path,
-    callback: (result: ReturnType<typeof pathMatch>) => R,
+    callback: (result: Exclude<ReturnType<typeof pathMatch>, false>) => R,
   }[],
 ) => {
   for (const branch of branches) {
