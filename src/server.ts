@@ -50,6 +50,20 @@ export namespace Server {
   };
 }
 
+const pathMatch = (pattern: Path, path: string) => match(pattern)(path);
+const branchMatch = <R = void>(
+  path: string,
+  branches: {
+    pattern: Path,
+    callback: (result: ReturnType<typeof pathMatch>) => R,
+  }[],
+) => {
+  for (const branch of branches) {
+    const result = pathMatch(branch.pattern, path);
+    if (result) return branch.callback(result);
+  }
+};
+
 export class Server {
 
   static json = express.json;
@@ -58,7 +72,8 @@ export class Server {
   static static = express.static;
   static text = express.text;
   static urlencoded = express.urlencoded;
-  static pathMatch = (pattern: Path, path: string) => match(pattern)(path);
+  static pathMatch = pathMatch;
+  static branchMatch = branchMatch;
 
   private _express?: Express;
   private _server?: ReturnType<typeof createHttpServer>;
