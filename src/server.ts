@@ -30,6 +30,7 @@ import { ServerOptions, createHttpServer } from './http';
 import { Server as IOServer, ServerOptions as IOServerOptions } from 'socket.io';
 import { defaultLogger } from './logger';
 import { match, Path } from 'path-to-regexp';
+import { sysinfo } from './sysinfo';
 
 export {
   Router,
@@ -72,8 +73,11 @@ export class Server {
   static static = express.static;
   static text = express.text;
   static urlencoded = express.urlencoded;
+
   static pathMatch = pathMatch;
   static branchMatch = branchMatch;
+
+  static sysinfo = sysinfo;
 
   private _express?: Express;
   private _server?: ReturnType<typeof createHttpServer>;
