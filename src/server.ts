@@ -24,6 +24,7 @@
 //
 
 import _ from 'lodash';
+import util from 'util';
 import express, { Express } from 'express';
 import { createExpress, ExpressOptions } from './express';
 import { ServerOptions, createHttpServer } from './http';
@@ -133,9 +134,10 @@ export class Server {
     return server.listen.bind(server);
   }
 
-  close() {
-    return new Promise<void>((res, rej) => {
-      this.server().close((err) => _.isNil(err) ? res() : rej(err));
-    });
+  async close() {
+    const socket = this._socket;
+    const server = this._server;
+    if (socket) await util.promisify(socket.close.bind(socket))();
+    if (server) await util.promisify(server.close.bind(server))();
   }
 }
