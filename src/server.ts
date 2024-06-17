@@ -135,9 +135,7 @@ export class Server {
   }
 
   async close() {
-    const socket = this._socket;
     const server = this._server;
-    if (socket) await util.promisify(socket.close.bind(socket))();
     if (server) await util.promisify(server.close.bind(server))();
   }
 }
