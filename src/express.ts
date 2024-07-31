@@ -67,13 +67,10 @@ export const createExpress = (
   } = options;
   const app = express();
   if (trustProxy) app.set('trust proxy', trustProxy);
-  if (corsOpts) app.use(cors(corsOpts));
-  app.use(rateLimit(rateLimitOpts ?? {
-    windowMs: 15 * 60 * 1000,
-    limit: 100,
-  }));
-  if (csrfOpts) app.use(csrfHandler(csrfOpts));
   app.use(logHandler(logger));
+  app.use(rateLimit(rateLimitOpts ?? {}));
+  if (corsOpts) app.use(cors(corsOpts));
+  if (csrfOpts) app.use(csrfHandler(csrfOpts));
   app.use(compression(compressionOpts));
   app.use(cookieParser(cookieSecret, cookieOtps));
   return app;
