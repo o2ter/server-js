@@ -28,6 +28,7 @@ import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
+import { rateLimit } from 'express-rate-limit';
 import { defaultLogger, logHandler } from './logger';
 import { csrfHandler, CsrfOptions } from './csrf';
 
@@ -39,6 +40,7 @@ export type ExpressOptions = {
   };
   cors?: cors.CorsOptions;
   csrf?: CsrfOptions;
+  rateLimit?: Parameters<typeof rateLimit>[0];
 }
 
 const defaultTrustProxy = () => {
@@ -61,10 +63,15 @@ export const createExpress = (
     } = {},
     cors: corsOpts,
     csrf: csrfOpts,
+    rateLimit: rateLimitOpts,
   } = options;
   const app = express();
   if (trustProxy) app.set('trust proxy', trustProxy);
   if (corsOpts) app.use(cors(corsOpts));
+  app.use(rateLimit(rateLimitOpts ?? {
+    windowMs: 15 * 60 * 1000,
+    limit: 100,
+  }));
   if (csrfOpts) app.use(csrfHandler(csrfOpts));
   app.use(logHandler(logger));
   app.use(compression(compressionOpts));
