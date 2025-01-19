@@ -40,8 +40,8 @@ export const logHandler = (logger: typeof defaultLogger) => morgan(
     const method = tokens.method(req, res);
     const url = tokens.url(req, res);
     const status = tokens.status(req, res) || '-';
-    const responseTime = tokens['response-time'](req, res);
-    const totalTime = tokens['total-time'](req, res);
+    const responseTime = tokens['response-time'](req, res) || '-';
+    const totalTime = tokens['total-time'](req, res) || '-';
     const contentLength = tokens.res(req, res, 'content-length') || '-';
 
     const _status = Number(status);
