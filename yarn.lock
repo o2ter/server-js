@@ -889,12 +889,12 @@
   dependencies:
     lodash "^4.17.21"
 
-"@o2ter/utils-js@^0.0.19":
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/@o2ter/utils-js/-/utils-js-0.0.19.tgz#c425291d049c92f802ff66f0a8d5de5a7748e92c"
-  integrity sha512-FosqNvEKzEV7KfeDvhdnTDCdv39oLW2OeiDLzM+NmeXwLrGJyQx0ilc3OWwQF0CG2FIy+W01MAPUZdgCHSQjcg==
+"@o2ter/utils-js@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@o2ter/utils-js/-/utils-js-0.0.20.tgz#b071165eb159179613a4b214ee64227d07913f8e"
+  integrity sha512-b77xkdc45fsUQ8atC8lASWR85uS8maMJwtN3ZZSbYzZlL8ejrCS9MKJm4zGr2UCECl9sd+jnGX18mT1b7MrwDw==
   dependencies:
-    lodash ">=4.17.21"
+    lodash ">=4.18.1"
 
 "@rollup/plugin-babel@^6.0.3":
   version "6.0.4"
@@ -1744,7 +1744,7 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
 
-lodash@>=4.17.21, lodash@^4.17.21, lodash@^4.18.1:
+lodash@>=4.18.1, lodash@^4.17.21, lodash@^4.18.1:
   version "4.18.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.18.1.tgz#ff2b66c1f6326d59513de2407bf881439812771c"
   integrity sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==
